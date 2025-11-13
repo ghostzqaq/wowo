@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充电桩运维合作案例展示</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>充电桩运维合作案例展示</h1>
+        <p class="subtitle">基于AI技术与资源共享的智慧运维解决方案，显著提升充电桩运营效率与用户体验</p>
+    </header>
+    
+    <div class="container">
+        <div class="case-cards">
+            <!-- 案例1: 能链智电 -->
+            <div class="case-card">
+                <div class="card-header">
+                    <h2>能链智电 - 智慧运维技术协同合作</h2>
+                </div>
+                <div class="card-body">
+                    <p>联合搭建「AI远程运维平台」，接入全国100+合作场站设备，实现故障预警准确率92%；通过运维人力共享机制，将场站巡检成本降低38%，设备平均修复时长从4.5小时缩短至1.2小时。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">92%</div>
+                            <div class="stat-label">故障预警准确率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">38%</div>
+                            <div class="stat-label">巡检成本降低</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.5h → 1.2h</div>
+                            <div class="stat-label">修复时长缩短</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100+</div>
+                            <div class="stat-label">合作场站</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-section">
+                        <h3>可视化展示</h3>
+                        <div class="visualization-desc">
+                            <strong>流程图：</strong>展示"设备数据采集→AI预警→工单派发→就近运维"全链路
+                        </div>
+                        
+                        <!-- 流程图 -->
+                        <div class="flowchart">
+                            <div class="flow-step">
+                                <div class="flow-icon">1</div>
+                                <div>设备数据采集</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">2</div>
+                                <div>AI预警分析</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">3</div>
+                                <div>工单智能派发</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step">
+                                <div class="flow-icon">4</div>
+                                <div>就近运维处理</div>
+                            </div>
+                        </div>
+                        
+                        <div class="visualization-desc">
+                            <strong>双轴折线图：</strong>对比合作前后"故障修复时长"与"运维成本"变化趋势
+                        </div>
+                        
+                        <!-- 双轴折线图 -->
+                        <div class="chart-container">
+                            <canvas id="dualAxisChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 案例2: 广州帝能云 -->
+            <div class="case-card">
+                <div class="card-header" style="background: var(--secondary-color);">
+                    <h2>广州帝能云 - 全周期运维服务共建</h2>
+                </div>
+                <div class="card-body">
+                    <p>共建「24小时运维响应体系」，共享4000+线下运维网点资源，为城中村、景区等8000+场景充电桩提供驻场巡检；设备故障解决率提升至99.9%，响应时效压缩至10分钟内，用户满意度达100%。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">99.9%</div>
+                            <div class="stat-label">故障解决率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">10min</div>
+                            <div class="stat-label">响应时效</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">用户满意度</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8000+</div>
+                            <div class="stat-label">服务场景</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-section">
+                        <h3>可视化展示</h3>
+                        <div class="visualization-desc">
+                            <strong>热力图：</strong>呈现全国运维网点覆盖密度
+                        </div>
+                        
+                        <!-- 热力图 -->
+                        <div class="heatmap-container" id="heatmap">
+                            <!-- 热力点将通过JS动态生成 -->
+                        </div>
+                        
+                        <div class="visualization-desc">
+                            <strong>数字仪表盘：</strong>实时展示核心指标
+                        </div>
+                        
+                        <!-- 仪表盘 -->
+                        <div class="gauge-container">
+                            <div class="gauge">
+                                <div class="chart-container" style="height: 100px;">
+                                    <canvas id="responseGauge"></canvas>
+                                </div>
+                                <div class="gauge-value">10min</div>
+                                <div class="gauge-label">响应时效</div>
+                            </div>
+                            <div class="gauge">
+                                <div class="chart-container" style="height: 100px;">
+                                    <canvas id="resolutionGauge"></canvas>
+                                </div>
+                                <div class="gauge-value">99.9%</div>
+                                <div class="gauge-label">故障解决率</div>
+                            </div>
+                            <div class="gauge">
+                                <div class="chart-container" style="height: 100px;">
+                                    <canvas id="scenarioGauge"></canvas>
+                                </div>
+                                <div class="gauge-value">8000+</div>
+                                <div class="gauge-label">服务场景</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 案例3: 特来电 -->
+            <div class="case-card">
+                <div class="card-header" style="background: #ea4335;">
+                    <h2>特来电 - 物流场景专项运维合作</h2>
+                </div>
+                <div class="card-body">
+                    <p>针对3000座物流重卡充电站定制运维方案，联合开发「电池健康检测模块」，充电时同步完成设备工况诊断；通过"定期深度巡检+备件前置仓储"，设备故障率下降62%，助力顺丰、京东物流降低车辆维护成本18%。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">62%</div>
+                            <div class="stat-label">故障率下降</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18%</div>
+                            <div class="stat-label">维护成本降低</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3000</div>
+                            <div class="stat-label">物流充电站</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">同步诊断</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-section">
+                        <h3>可视化展示</h3>
+                        <div class="visualization-desc">
+                            <strong>对比柱状图：</strong>展示合作前后"物流场景设备故障率"
+                        </div>
+                        
+                        <!-- 对比柱状图 -->
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                        
+                        <div class="visualization-desc">
+                            <strong>备件仓储分布图：</strong>标注重点物流干线的运维保障节点
+                        </div>
+                        
+                        <!-- 仓储分布图 -->
+                        <div class="warehouse-map" id="warehouseMap">
+                            <!-- 仓储点将通过JS动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>充电桩运维合作案例展示 &copy; 2023</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
