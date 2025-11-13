@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充电桩运维合作案例展示</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --dark-color: #202124;
+            --light-color: #f8f9fa;
+            --gray-color: #dadce0;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0d47a1);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .case-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .card-footer {
+            padding: 1rem 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid var(--gray-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #5f6368;
+        }
+        
+        .chart-container {
+            height: 250px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .visualization-desc {
+            background: #f1f8ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #0d62d9;
+            transform: translateY(-2px);
+        }
+        
+        .flowchart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+            padding: 0.5rem;
+        }
+        
+        .flow-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .flow-arrow {
+            flex: 0 0 30px;
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .heatmap-container {
+            height: 300px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .heatmap-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+        
+        .gauge-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .gauge {
+            width: 120px;
+            text-align: center;
+        }
+        
+        .gauge-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+        }
+        
+        .gauge-label {
+            font-size: 0.9rem;
+            color: #5f6368;
+        }
+        
+        .comparison-chart {
+            margin: 1.5rem 0;
+        }
+        
+        .warehouse-map {
+            height: 200px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .warehouse-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .warehouse-label {
+            position: absolute;
+            font-size: 0.8rem;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--dark-color);
+            color: white;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .case-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .flowchart {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+            
+            .gauge-container {
+                justify-content: center;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>充电桩运维合作案例展示</h1>
+        <p class="subtitle">基于AI技术与资源共享的智慧运维解决方案，显著提升充电桩运营效率与用户体验</p>
+    </header>
+    
+    <div class="container">
+        <div class="case-cards">
+            <!-- 案例1: 能链智电 -->
+            <div class="case-card">
+                <div class="card-header">
+                    <h2>能链智电 - 智慧运维技术协同合作</h2>
+                </div>
+                <div class="card-body">
+                    <p>联合搭建「AI远程运维平台」，接入全国100+合作场站设备，实现故障预警准确率92%；通过运维人力共享机制，将场站巡检成本降低38%，设备平均修复时长从4.5小时缩短至1.2小时。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">92%</div>
+                            <div class="stat-label">故障预警准确率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">38%</div>
+                            <div class="stat-label">巡检成本降低</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.5h → 1.2h</div>
+                            <div class="stat-label">修复时长缩短</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100+</div>
+                            <div class="stat-label">合作场站</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-desc">
+                        <strong>可视化建议：</strong>用流程图展示"设备数据采集→AI预警→工单派发→就近运维"全链路；配双轴折线图对比合作前后"故障修复时长"与"运维成本"变化趋势。
+                    </div>
+                    
+                    <!-- 流程图 -->
+                    <div class="flowchart">
+                        <div class="flow-step">
+                            <div class="flow-icon">1</div>
+                            <div>设备数据采集</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-icon">2</div>
+                            <div>AI预警分析</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-icon">3</div>
+                            <div>工单智能派发</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="flow-icon">4</div>
+                            <div>就近运维处理</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 双轴折线图 -->
+                    <div class="chart-container">
+                        <canvas id="dualAxisChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn">查看详细案例</button>
+                </div>
+            </div>
+            
+            <!-- 案例2: 广州帝能云 -->
+            <div class="case-card">
+                <div class="card-header" style="background: var(--secondary-color);">
+                    <h2>广州帝能云 - 全周期运维服务共建</h2>
+                </div>
+                <div class="card-body">
+                    <p>共建「24小时运维响应体系」，共享4000+线下运维网点资源，为城中村、景区等8000+场景充电桩提供驻场巡检；设备故障解决率提升至99.9%，响应时效压缩至10分钟内，用户满意度达100%。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">99.9%</div>
+                            <div class="stat-label">故障解决率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">10min</div>
+                            <div class="stat-label">响应时效</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">用户满意度</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8000+</div>
+                            <div class="stat-label">服务场景</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-desc">
+                        <strong>可视化建议：</strong>用热力图呈现全国运维网点覆盖密度；用数字仪表盘实时展示"响应时效(10min)""故障解决率(99.9%)""服务场景数(8000+)"核心指标。
+                    </div>
+                    
+                    <!-- 热力图 -->
+                    <div class="heatmap-container" id="heatmap">
+                        <!-- 热力点将通过JS动态生成 -->
+                    </div>
+                    
+                    <!-- 仪表盘 -->
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <div class="chart-container" style="height: 100px;">
+                                <canvas id="responseGauge"></canvas>
+                            </div>
+                            <div class="gauge-value">10min</div>
+                            <div class="gauge-label">响应时效</div>
+                        </div>
+                        <div class="gauge">
+                            <div class="chart-container" style="height: 100px;">
+                                <canvas id="resolutionGauge"></canvas>
+                            </div>
+                            <div class="gauge-value">99.9%</div>
+                            <div class="gauge-label">故障解决率</div>
+                        </div>
+                        <div class="gauge">
+                            <div class="chart-container" style="height: 100px;">
+                                <canvas id="scenarioGauge"></canvas>
+                            </div>
+                            <div class="gauge-value">8000+</div>
+                            <div class="gauge-label">服务场景</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn" style="background: var(--secondary-color);">查看详细案例</button>
+                </div>
+            </div>
+            
+            <!-- 案例3: 特来电 -->
+            <div class="case-card">
+                <div class="card-header" style="background: #ea4335;">
+                    <h2>特来电 - 物流场景专项运维合作</h2>
+                </div>
+                <div class="card-body">
+                    <p>针对3000座物流重卡充电站定制运维方案，联合开发「电池健康检测模块」，充电时同步完成设备工况诊断；通过"定期深度巡检+备件前置仓储"，设备故障率下降62%，助力顺丰、京东物流降低车辆维护成本18%。</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">62%</div>
+                            <div class="stat-label">故障率下降</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18%</div>
+                            <div class="stat-label">维护成本降低</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3000</div>
+                            <div class="stat-label">物流充电站</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">同步诊断</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visualization-desc">
+                        <strong>可视化建议：</strong>用对比柱状图展示合作前后"物流场景设备故障率"；配备件仓储分布图标注重点物流干线的运维保障节点。
+                    </div>
+                    
+                    <!-- 对比柱状图 -->
+                    <div class="chart-container">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                    
+                    <!-- 仓储分布图 -->
+                    <div class="warehouse-map" id="warehouseMap">
+                        <!-- 仓储点将通过JS动态生成 -->
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn" style="background: #ea4335;">查看详细案例</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>充电桩运维合作案例展示 &copy; 2023</p>
+    </footer>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 案例1: 双轴折线图
+            const dualAxisCtx = document.getElementById('dualAxisChart').getContext('2d');
+            new Chart(dualAxisCtx, {
+                type: 'line',
+                data: {
+                    labels: ['合作前', '第1季度', '第2季度', '第3季度', '当前'],
+                    datasets: [
+                        {
+                            label: '故障修复时长(小时)',
+                            data: [4.5, 3.2, 2.1, 1.5, 1.2],
+                            borderColor: '#1a73e8',
+                            backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                            yAxisID: 'y',
+                            tension: 0.3
+                        },
+                        {
+                            label: '运维成本指数',
+                            data: [100, 85, 72, 65, 62],
+                            borderColor: '#34a853',
+                            backgroundColor: 'rgba(52, 168, 83, 0.1)',
+                            yAxisID: 'y1',
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '故障修复时长(小时)'
+                            },
+                            min: 0,
+                            max: 5
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: '运维成本指数'
+                            },
+                            min: 50,
+                            max: 110,
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    }
+                }
+            });
+            
+            // 案例2: 热力图
+            const heatmap = document.getElementById('heatmap');
+            const heatmapWidth = heatmap.offsetWidth;
+            const heatmapHeight = heatmap.offsetHeight;
+            
+            // 生成随机热力点
+            for (let i = 0; i < 150; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'heatmap-dot';
+                dot.style.left = Math.random() * (heatmapWidth - 10) + 'px';
+                dot.style.top = Math.random() * (heatmapHeight - 10) + 'px';
+                
+                // 东部地区密度更高
+                if (Math.random() > 0.3) {
+                    dot.style.left = (Math.random() * 0.7 + 0.15) * heatmapWidth + 'px';
+                }
+                
+                // 随机大小和透明度
+                const size = 5 + Math.random() * 8;
+                dot.style.width = size + 'px';
+                dot.style.height = size + 'px';
+                dot.style.opacity = 0.5 + Math.random() * 0.5;
+                
+                heatmap.appendChild(dot);
+            }
+            
+            // 案例2: 仪表盘
+            // 响应时效仪表盘
+            const responseGaugeCtx = document.getElementById('responseGauge').getContext('2d');
+            new Chart(responseGaugeCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [10, 90],
+                        backgroundColor: ['#1a73e8', '#f0f0f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    circumference: 180,
+                    rotation: -90,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+            
+            // 故障解决率仪表盘
+            const resolutionGaugeCtx = document.getElementById('resolutionGauge').getContext('2d');
+            new Chart(resolutionGaugeCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [99.9, 0.1],
+                        backgroundColor: ['#34a853', '#f0f0f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    circumference: 180,
+                    rotation: -90,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+            
+            // 服务场景仪表盘
+            const scenarioGaugeCtx = document.getElementById('scenarioGauge').getContext('2d');
+            new Chart(scenarioGaugeCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [100, 0],
+                        backgroundColor: ['#fbbc05', '#f0f0f0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    circumference: 180,
+                    rotation: -90,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+            
+            // 案例3: 对比柱状图
+            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(comparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['合作前', '合作后'],
+                    datasets: [{
+                        label: '物流场景设备故障率(%)',
+                        data: [18, 6.84],
+                        backgroundColor: [
+                            'rgba(234, 67, 53, 0.7)',
+                            'rgba(52, 168, 83, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(234, 67, 53)',
+                            'rgb(52, 168, 83)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '故障率(%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 案例3: 仓储分布图
+            const warehouseMap = document.getElementById('warehouseMap');
+            const mapWidth = warehouseMap.offsetWidth;
+            const mapHeight = warehouseMap.offsetHeight;
+            
+            // 定义主要物流干线
+            const logisticsLines = [
+                { name: '京广线', points: [{x: 0.2, y: 0.3}, {x: 0.5, y: 0.5}, {x: 0.8, y: 0.7}] },
+                { name: '沪昆线', points: [{x: 0.7, y: 0.2}, {x: 0.5, y: 0.5}, {x: 0.3, y: 0.8}] },
+                { name: '沿海线', points: [{x: 0.8, y: 0.3}, {x: 0.7, y: 0.6}, {x: 0.6, y: 0.9}] }
+            ];
+            
+            // 生成仓储点
+            logisticsLines.forEach(line => {
+                line.points.forEach(point => {
+                    const warehouse = document.createElement('div');
+                    warehouse.className = 'warehouse-point';
+                    warehouse.style.left = (point.x * 100) + '%';
+                    warehouse.style.top = (point.y * 100) + '%';
+                    warehouseMap.appendChild(warehouse);
+                    
+                    // 添加标签
+                    const label = document.createElement('div');
+                    label.className = 'warehouse-label';
+                    label.textContent = line.name + '节点';
+                    label.style.left = (point.x * 100) + '%';
+                    label.style.top = (point.y * 100 - 20) + '%';
+                    warehouseMap.appendChild(label);
+                });
+            });
+            
+            // 添加交互效果：点击卡片展开/收起详细信息
+            const cards = document.querySelectorAll('.case-card');
+            cards.forEach(card => {
+                const btn = card.querySelector('.btn');
+                btn.addEventListener('click', function() {
+                    const body = card.querySelector('.card-body');
+                    if (body.style.maxHeight) {
+                        body.style.maxHeight = null;
+                        btn.textContent = '查看详细案例';
+                    } else {
+                        body.style.maxHeight = body.scrollHeight + 'px';
+                        btn.textContent = '收起案例';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
